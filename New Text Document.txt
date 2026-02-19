@@ -1,0 +1,253 @@
+Alright, here’s **both** in one shot: first the mental model (this is the key), then a **Tcl-for-EDA survival cheat sheet**. Read top to bottom once and Tcl stops feeling random.
+
+---
+
+## 1. The mental model that makes Tcl tolerable
+
+### Rule 0: **Tcl has exactly one syntax**
+
+```
+command arg1 arg2 arg3
+```
+
+That’s it.
+No statements. No operators. No keywords.
+**Everything** — `if`, `for`, `set`, `expr`, `puts` — is just a command.
+
+Once you accept that, half the confusion evaporates.
+
+---
+
+### Rule 1: **Evaluation happens in phases**
+
+This is where people lose sanity.
+
+**Phase order (simplified):**
+
+1. **Substitution**
+
+   * `$var` → value
+   * `[...]` → execute command, replace with result
+   * `\` escapes
+2. **Word splitting** (by whitespace)
+3. **Command execution**
+
+If you remember *“Tcl rewrites the line before running it”*, things click.
+
+---
+
+### Rule 2: **Braces are a nuclear bunker**
+
+* `{}` = *nothing inside is touched*
+* No `$`
+* No `[]`
+* No surprises
+
+That’s why EDA scripts drown in braces. They’re not ugly — they’re defensive programming.
+
+Bad:
+
+```
+if $a == $b { puts "equal" }
+```
+
+Correct:
+
+```
+if {$a == $b} { puts "equal" }
+```
+
+The braces stop Tcl from doing something clever and stupid.
+
+---
+
+### Rule 3: **Quotes are liars**
+
+* `"` allows substitution
+* `{}` does not
+* Most Tcl bugs come from using quotes when braces were needed
+
+If logic is involved → **use braces**.
+Quotes are for human-readable strings only.
+
+---
+
+### Rule 4: **`expr` is a separate universe**
+
+Math does **not** happen unless you ask for it.
+
+```
+set x 2+3        ;# string
+set x [expr 2+3] ;# math
+```
+
+Inside `expr {}`, Tcl suddenly behaves like a normal language. Always use braces with `expr`.
+
+---
+
+### Rule 5: **If it looks weird, Tcl probably means it literally**
+
+Tcl does *exactly* what you tell it, not what you meant. There’s no intent inference. That’s why EDA vendors like it — deterministic, boring, scriptable.
+
+---
+
+## 2. “Tcl for EDA only” cheat sheet (no philosophy, just survival)
+
+### Variables
+
+```
+set a 10
+set b $a
+```
+
+Arrays (used everywhere in tools):
+
+```
+set cell(area) 120
+puts $cell(area)
+```
+
+---
+
+### Lists (EDA tools love lists)
+
+```
+set cells [get_cells *U*]
+foreach c $cells {
+    puts $c
+}
+```
+
+Lists are just strings with structure. Don’t fight it.
+
+---
+
+### Conditionals (ALWAYS like this)
+
+```
+if {$slack < 0} {
+    puts "Timing violation"
+} elseif {$slack < 0.1} {
+    puts "Close"
+} else {
+    puts "Clean"
+}
+```
+
+No braces → broken script → wasted night.
+
+---
+
+### Loops
+
+```
+foreach net [get_nets *clk*] {
+    puts $net
+}
+```
+
+```
+for {set i 0} {$i < 10} {incr i} {
+    puts $i
+}
+```
+
+---
+
+### Math
+
+```
+set w 1.2
+set l 0.06
+set area [expr {$w * $l}]
+```
+
+Never:
+
+```
+expr $w * $l
+```
+
+That’s how you summon bugs.
+
+---
+
+### Procedures (EDA automation gold)
+
+```
+proc report_bad_cells {threshold} {
+    foreach c [get_cells *] {
+        set slack [get_attribute $c slack]
+        if {$slack < $threshold} {
+            puts $c
+        }
+    }
+}
+```
+
+Call:
+
+```
+report_bad_cells 0.0
+```
+
+---
+
+### Tool interaction pattern (90% of real scripts)
+
+```
+set objs [get_cells *U*]
+foreach o $objs {
+    set val [get_attribute $o area]
+    if {$val > 100} {
+        puts "$o is large"
+    }
+}
+```
+
+Memorize this pattern. You’ll reuse it forever.
+
+---
+
+### Debugging sanity tips
+
+* `puts "DEBUG: $var"`
+* `puts [info level 0]`
+* If something explodes → wrap it in `{}`
+
+---
+
+## Why Tcl survives in VLSI (short and honest)
+
+EDA tools embed Tcl because it’s:
+
+* tiny
+* deterministic
+* easy to extend with C/C++
+* stable for decades
+
+Synopsys, Cadence, Siemens, AMD, Intel — all standardized around Tcl scripting for flows and automation because it minimizes tool-integration friction and long-term maintenance risk [Synopsys Tcl User Guide; Cadence SKILL/Tcl Integration Notes].
+
+You don’t have to like it. You just have to **dominate it**.
+
+---
+
+### Bottom line
+
+Tcl isn’t elegant.
+It’s not modern.
+It’s a **control language**, not a programming language.
+
+Treat it like a cranky lab instrument:
+
+* follow the rules
+* don’t improvise
+* brace everything
+
+If you want, next we can do:
+
+* **common Tcl traps that break EDA scripts**
+* **writing clean Tcl that doesn’t look like ancient curses**
+* **how to transition from Tcl → Python without rewriting flows**
+
+Say the word.

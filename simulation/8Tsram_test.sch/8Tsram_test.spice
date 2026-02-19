@@ -1,0 +1,67 @@
+** sch_path: /home/user/xschem_projects/8Tsram_test.sch
+**.subckt 8Tsram_test
+V3 BL GND PULSE(0 1.8 1ns 100ps 100ps 5ns 10ns 2)
+V4 WL GND PULSE(0 1.8 1.5ns 100ps 100ps 4ns 5ns 4)
+V5 BLB GND PULSE(0 1.8 6ns 100ps 100ps 5ns 10ns 2)
+VSS VCC GND 1.8
+XM6 RBL VCC GND GND sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad=0.29 as=0.29 pd=2.58 ps=2.58 nrd=0.29 nrs=0.29 sa=0 sb=0 sd=0
++ mult=1
+x1 VCC RWL BLB BL WL RBL GND 8T_sram_cell
+VSS1 RWL GND 1.8
+x2 VCC RWL BLB2 BL2 WL RBL GND 8T_sram_cell
+V1 BL2 GND PULSE(0 1.8 1ns 100ps 100ps 10ns 20ns 1)
+V2 BLB2 GND PULSE(0 1.8 11ns 100ps 100ps 10ns 20ns 1)
+**** begin user architecture code
+
+
+**vcc vcc 0 DC 1.8
+**vss vss 0 DC 0
+
+
+.tran 0.01ns 30ns
+.control
+run
+* plot RBL WL+2 BL+2.1 BLB+2.1
+plot RBL BL+2 BL2+4 BLB+6 BLB2+8 WL+10
+.endc
+.saveall
+
+
+
+
+** opencircuitdesign pdks install
+.lib /home/user/.ciel/ciel/sky130/versions/d400e26845538beaeb7cc5fdb9bfc06c30ea27cb/sky130A/libs.tech/combined/sky130.lib.spice tt
+
+**** end user architecture code
+**.ends
+
+* expanding   symbol:  8T_sram_cell.sym # of pins=7
+** sym_path: /home/user/xschem_projects/8T_sram_cell.sym
+** sch_path: /home/user/xschem_projects/8T_sram_cell.sch
+.subckt 8T_sram_cell VCC RWL BLB BL WL RBL VSS
+*.iopin VCC
+*.iopin BLB
+*.iopin WL
+*.iopin BL
+*.iopin VSS
+*.iopin RBL
+*.iopin RWL
+XM1 q_bar q VSS VSS sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad=0.29 as=0.29 pd=2.58 ps=2.58 nrd=0.29 nrs=0.29 sa=0 sb=0 sd=0
++ mult=1
+XM2 q q_bar VSS VSS sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad=0.29 as=0.29 pd=2.58 ps=2.58 nrd=0.29 nrs=0.29 sa=0 sb=0 sd=0
++ mult=1
+XM3 q_bar q VCC VCC sky130_fd_pr__pfet_01v8 L=0.15 W=4 nf=1 ad=1.16 as=1.16 pd=8.58 ps=8.58 nrd=0.0725 nrs=0.0725 sa=0 sb=0 sd=0
++ mult=1
+XM4 q q_bar VCC VCC sky130_fd_pr__pfet_01v8 L=0.15 W=4 nf=1 ad=1.16 as=1.16 pd=8.58 ps=8.58 nrd=0.0725 nrs=0.0725 sa=0 sb=0 sd=0
++ mult=1
+XM5 BLB WL q_bar VSS sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad=0.29 as=0.29 pd=2.58 ps=2.58 nrd=0.29 nrs=0.29 sa=0 sb=0 sd=0
++ mult=1
+XM6 read RWL RBL RBL sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad=0.29 as=0.29 pd=2.58 ps=2.58 nrd=0.29 nrs=0.29 sa=0 sb=0 sd=0
++ mult=1
+XM7 VCC q read read sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad=0.29 as=0.29 pd=2.58 ps=2.58 nrd=0.29 nrs=0.29 sa=0 sb=0 sd=0
++ mult=1
+XM8 q WL BL VSS sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad=0.29 as=0.29 pd=2.58 ps=2.58 nrd=0.29 nrs=0.29 sa=0 sb=0 sd=0 mult=1
+.ends
+
+.GLOBAL GND
+.end
