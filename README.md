@@ -39,7 +39,7 @@ xschem          # Blocks terminal until xschem is closed
 | `code.sym` | ngspice code block (hidden in schematic) |
 | `8T_sram_cell.sym` | 8T SRAM cell |
 
-![devices folder](devices_folder.png)
+![devices folder](https://github.com/Project-Team2/xschem_projects_github/blob/main/readme%20images/devices_folder.png)
 
 ### Key Files — `xschem_projects/` folder
 
@@ -51,7 +51,7 @@ xschem          # Blocks terminal until xschem is closed
 | `8T_sram_cell.sch` | 8T SRAM cell schematic |
 | `8T_sram_cell.sym` | Symbol linked to `8T_sram_cell.sch` |
 
-![xschem projects](xschem_projects.png)
+![xschem projects](https://github.com/Project-Team2/xschem_projects_github/blob/main/readme%20images/xschem_projects.png)
 
 ---
 
@@ -150,4 +150,5 @@ click Up arrow to view previous ran commands(you can see my history too as it is
 ### In windows File Explorer
 
 Enter `\\wsl$` in address bar to view files of ubuntu just as you view files in windows.
-[wsl_fileExplorer](wsl_fileExplorer.png)
+
+[wsl_fileExplorer](https://github.com/Project-Team2/xschem_projects_github/blob/main/readme%20images/wsl_fileExplorer.png)
