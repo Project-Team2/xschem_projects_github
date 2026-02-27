@@ -185,11 +185,5 @@ C {lab_pin.sym} 180 -60 0 0 {name=p27 sig_type=std_logic lab=IN+}
 C {lab_pin.sym} 630 -60 0 1 {name=p28 sig_type=std_logic lab=IN-}
 C {lab_pin.sym} 400 -340 0 1 {name=p29 sig_type=std_logic lab=VSS}
 C {lab_pin.sym} 360 0 0 0 {name=p7 sig_type=std_logic lab=CLK}
-C {sky130_fd_pr/res_high_po.sym} 480 0 0 0 {name=R2
-W=1
-L=1
-model=res_high_po
-spiceprefix=X
-mult=1}
 C {lab_pin.sym} 360 -580 0 0 {name=p24 sig_type=std_logic lab=CLK_bar
 }
